@@ -34,3 +34,225 @@
       padding-right: 3.5rem;
       width: 100%;
     }
+
+    .brand-name {
+      font-size: clamp(0.75rem, 1.3vw, 1rem);
+      font-weight: 500;
+      color: #f0ede6;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 3.5rem;
+      width: 100%;
+    }
+
+    .coming-soon-text {
+      font-size: clamp(0.75rem, 1.3vw, 1rem);
+      font-weight: 400;
+      color: #f0ede6;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-style: italic;
+    }
+
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    @keyframes spin {
+      to { --angle: 360deg; }
+    }
+
+    .video-wrap {
+      position: relative;
+      width: 222px;
+      height: 393px;
+    }
+
+    /* Just a very tight, faint blur — barely a whisper */
+    .glow-blur {
+      position: absolute;
+      inset: -6px;
+      border-radius: 32px;
+      z-index: 0;
+      background: conic-gradient(from var(--angle, 0deg), #D4537E, #EF9F27, #5DCAA5, #AFA9EC, #D4537E);
+      filter: blur(6px);
+      opacity: 0.6;
+      animation: spin 4s linear infinite;
+    }
+
+    /* The thin line ring — 2px only */
+    .glow-ring {
+      position: absolute;
+      inset: -2px;
+      border-radius: 28px;
+      z-index: 1;
+      background: conic-gradient(from var(--angle, 0deg), #D4537E, #EF9F27, #5DCAA5, #AFA9EC, #D4537E);
+      animation: spin 4s linear infinite;
+    }
+
+    .video-clip {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      border-radius: 26px;
+      overflow: hidden;
+      clip-path: inset(0 round 26px);
+      background: transparent;
+    }
+
+    #vimeo-frame {
+      display: block;
+      border: none;
+      position: absolute;
+      top: -60px;
+      left: -60px;
+      width: calc(222px + 120px);
+      height: calc(393px + 120px);
+      background: transparent;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: #080808;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 1.2s ease;
+    }
+
+    #overlay.fading {
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .play-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 1px solid rgba(240,237,230,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .play-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #f0ede6;
+      margin-left: 3px;
+      transition: fill 0.2s;
+    }
+
+    #overlay:hover .play-btn { border-color: #EF9F27; transform: scale(1.08); }
+    #overlay:hover .play-btn svg { fill: #EF9F27; }
+
+    #bottom-label {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 0; right: 0;
+      text-align: center;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    #bottom-label p {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: lowercase;
+      color: rgba(240,237,230,0.18);
+      font-weight: 300;
+    }
+
+    @media (max-width: 640px) {
+      .layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 2rem;
+        overflow-y: auto;
+        padding: 3rem 1.5rem 4rem;
+      }
+      .left  { justify-content: center; padding-right: 0; order: 1; }
+      .video-wrap { order: 2; width: 190px; height: 338px; }
+      .right { justify-content: center; padding-left: 0; order: 3; }
+      #vimeo-frame { top: -60px; left: -60px; width: calc(190px + 120px); height: calc(338px + 120px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="layout">
+    <div class="left">
+      <p class="brand-name">Shreni Sutra</p>
+    </div>
+
+    <div class="video-wrap">
+      <div class="glow-blur"></div>
+      <div class="glow-ring"></div>
+      <div class="video-clip">
+        <iframe
+          id="vimeo-frame"
+          src="https://player.vimeo.com/video/1190022057?background=1&loop=1&muted=1&autopause=0&app_id=58479"
+          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+          referrerpolicy="strict-origin-when-cross-origin"
+          title="Shreni Sutra">
+        </iframe>
+      </div>
+    </div>
+
+    <div class="right">
+      <p class="coming-soon-text">Coming Soon</p>
+    </div>
+  </div>
+
+  <div id="overlay">
+    <div class="play-btn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="5,3 19,12 5,21"/>
+      </svg>
+    </div>
+  </div>
+
+  <div id="bottom-label">
+    <p>shrenisutra.com</p>
+  </div>
+
+  <script>
+    function loadVimeoScript(callback) {
+      var script = document.createElement('script');
+      script.src = 'https://player.vimeo.com/api/player.js';
+      script.onload = callback;
+      document.head.appendChild(script);
+    }
+
+    loadVimeoScript(function() {
+      var overlay = document.getElementById('overlay');
+      var iframe  = document.getElementById('vimeo-frame');
+      var player  = new Vimeo.Player(iframe);
+
+      overlay.addEventListener('click', function() {
+        player.setMuted(false);
+        player.setVolume(1);
+        player.play().then(function() {
+          overlay.classList.add('fading');
+        }).catch(function(err) {
+          console.warn('Play error:', err);
+          overlay.classList.add('fading');
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
